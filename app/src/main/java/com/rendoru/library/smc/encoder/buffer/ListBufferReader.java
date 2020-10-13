@@ -8,21 +8,17 @@ import java.util.List;
 public class ListBufferReader implements IBufferReader {
 
     private int start, end;
-    private List<Byte> data;
+    private byte[] data;
 
-    public ListBufferReader(Byte[] data) {
-        this(Arrays.asList(data));
+    public ListBufferReader(byte[] data) {
+        this(data, 0, data.length);
     }
 
-    public ListBufferReader(List<Byte> data) {
-        this(data, 0, data.size());
+    public ListBufferReader(byte[] data, int start) {
+        this(data, start, data.length);
     }
 
-    public ListBufferReader(List<Byte> data, int start) {
-        this(data, start, data.size());
-    }
-
-    public ListBufferReader(List<Byte> data, int start, int end) {
+    public ListBufferReader(byte[] data, int start, int end) {
         this.data = data;
         this.start = start;
         this.end = end;
@@ -65,11 +61,19 @@ public class ListBufferReader implements IBufferReader {
         if(size() <= index) {
             throw new IndexOutOfBoundsException();
         }
-        return data.get(start + index);
+        return data[start + index];
     }
 
     @Override
     public int size() {
         return end - start;
+    }
+
+    @Override
+    public byte[] getArrayCopy() {
+        int size = size();
+        byte[] copy = new byte[size];
+        System.arraycopy(data, start, copy, 0, size);
+        return copy;
     }
 }

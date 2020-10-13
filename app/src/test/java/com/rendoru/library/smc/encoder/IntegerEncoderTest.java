@@ -5,18 +5,15 @@ import com.rendoru.library.smc.encoder.buffer.ListBufferWriter;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runners.JUnit4;
-
-import java.util.Base64;
 
 public class IntegerEncoderTest {
 
     @Test
     public void general() {
-        IEncoder encoder = new IntegerEncoder();
+        IEncoder encoder = IntegerEncoder.getInstance();
         ListBufferWriter listBufferWriter = new ListBufferWriter();
         encoder.encode(123456789L, listBufferWriter);
-        Byte[] result = listBufferWriter.getContent();
+        byte[] result = listBufferWriter.getArrayCopy();
         IBufferReader reader = new ListBufferReader(result);
         long decoded = (long) encoder.decode(reader);
         Assert.assertEquals(123456789L, decoded);
@@ -25,11 +22,11 @@ public class IntegerEncoderTest {
     @Test
     public void encodeCompability() {
         String data = "hBXNWwc=";
-        IEncoder encoder = new IntegerEncoder();
+        IEncoder encoder = IntegerEncoder.getInstance();
         ListBufferWriter listBufferWriter = new ListBufferWriter();
         encoder.encode((long)123456789, listBufferWriter);
-        Byte[] result = listBufferWriter.getContent();
-        String textResult = java.util.Base64.getEncoder().encodeToString(ValueEncoder.toPrimitive(result));
+        byte[] result = listBufferWriter.getArrayCopy();
+        String textResult = java.util.Base64.getEncoder().encodeToString(result);
         Assert.assertEquals(data, textResult);
     }
 }

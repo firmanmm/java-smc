@@ -8,7 +8,7 @@ public class FloatEncoder implements IEncoder {
     private IntegerEncoder integerEncoder;
     private static FloatEncoder cache;
 
-    public FloatEncoder() {
+    private FloatEncoder() {
         integerEncoder = IntegerEncoder.getInstance();
     }
 

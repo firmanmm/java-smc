@@ -6,4 +6,5 @@ public interface IBufferReader {
     byte peek();
     byte peek(int index);
     int size();
+    byte[] getArrayCopy();
 }

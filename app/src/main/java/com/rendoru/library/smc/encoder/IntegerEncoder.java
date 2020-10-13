@@ -8,10 +8,12 @@ public class IntegerEncoder implements IEncoder {
     private final static int INT_ENCODER_MAX_ARRAY_LIMIT = 8;
     private static IntegerEncoder cache;
 
+    private IntegerEncoder(){}
+
     @Override
     public void encode(Object object, IBufferWriter writer) {
         Long data = (Long)object;
-        Byte[] byteArray = new Byte[INT_ENCODER_MAX_ARRAY_LIMIT];
+        byte[] byteArray = new byte[INT_ENCODER_MAX_ARRAY_LIMIT];
         int spaceUsed = 0;
         boolean isPositive = data > 0;
         if(isPositive){

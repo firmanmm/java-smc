@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface IBufferWriter {
     void write(byte data);
-    void write(List<Byte> datas);
-    void write(Byte[] data, int start, int end);
-    Byte[] getContent();
+    void write(byte[] data);
+    void write(byte[] data, int start, int end);
+    byte[] getArrayCopy();
 }
