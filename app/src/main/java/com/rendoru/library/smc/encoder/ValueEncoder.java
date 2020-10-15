@@ -26,11 +26,14 @@ public class ValueEncoder implements IEncoder {
     private static Map<Class, Byte> classDispatcher;
 
     public ValueEncoder() {
+        encoderDispatcher = new HashMap<>();
         if(classDispatcher == null) {
             classDispatcher = new HashMap<>();
-            classDispatcher.put(Byte.class, BYTE_VALUE_ENCODER);
+            classDispatcher.put(Byte.class, INT_VALUE_ENCODER);
             classDispatcher.put(Integer.class, INT_VALUE_ENCODER);
+            classDispatcher.put(Long.class, INT_VALUE_ENCODER);
             classDispatcher.put(String.class, STRING_VALUE_ENCODER);
+            classDispatcher.put(Float.class, FLOAT_VALUE_ENCODER);
             classDispatcher.put(Double.class, FLOAT_VALUE_ENCODER);
             classDispatcher.put(Byte[].class, BYTE_ARRAY_VALUE_ENCODER);
             classDispatcher.put(List.class, LIST_VALUE_ENCODER);
