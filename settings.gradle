@@ -1,0 +1,3 @@
+include ':smc'
+include ':app'
+rootProject.name = "SimpleMessageCodec"
