@@ -61,13 +61,13 @@ byte[] encoded = simpleMessageCodec.manualEncode(original, (data, writer) -> {
 });
 
 DummyClass decoded = (DummyClass)simpleMessageCodec.manualDecode(encoded, reader -> {
-DummyClass dummyData = new DummyClass();
-dummyData.name = (String) reader.read();
-dummyData.age = (int)(long)reader.read();
-dummyData.fingerPrint = (byte[]) reader.read();
-dummyData.active = (boolean)reader.read();
-dummyData.weight = (double)reader.read();
-dummyData.relative = (List<String>)reader.read();
-return dummyData;
+    DummyClass dummyData = new DummyClass();
+    dummyData.name = (String) reader.read();
+    dummyData.age = (int)(long)reader.read();
+    dummyData.fingerPrint = (byte[]) reader.read();
+    dummyData.active = (boolean)reader.read();
+    dummyData.weight = (double)reader.read();
+    dummyData.relative = (List<String>)reader.read();
+    return dummyData;
 });
 ```
