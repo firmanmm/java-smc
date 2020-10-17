@@ -12,7 +12,7 @@ public class IntegerEncoder implements IEncoder {
 
     @Override
     public void encode(Object object, IBufferWriter writer) {
-        Long data = (Long)object;
+        long data = (long)object;
         byte[] byteArray = new byte[INT_ENCODER_MAX_ARRAY_LIMIT];
         int spaceUsed = 0;
         boolean isPositive = data > 0;

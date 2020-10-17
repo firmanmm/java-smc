@@ -10,6 +10,10 @@ import java.util.Map;
 
 public class ValueEncoder implements IEncoder {
 
+    private interface ICaster {
+        Object cast(Object object);
+    }
+
     public final static byte BYTE_VALUE_ENCODER = 1;
     public final static byte INT_VALUE_ENCODER = 2;
     public final static byte UINT_VALUE_ENCODER = 3;
@@ -24,41 +28,51 @@ public class ValueEncoder implements IEncoder {
 
     private Map<Byte, IEncoder> encoderDispatcher;
     private static Map<Class, Byte> classDispatcher;
+    private static Map<Class, ICaster> casterDispatcher;
 
     public ValueEncoder() {
         encoderDispatcher = new HashMap<>();
-        if(classDispatcher == null) {
+        if (classDispatcher == null) {
             classDispatcher = new HashMap<>();
-            classDispatcher.put(Byte.class, INT_VALUE_ENCODER);
-            classDispatcher.put(Integer.class, INT_VALUE_ENCODER);
             classDispatcher.put(Long.class, INT_VALUE_ENCODER);
             classDispatcher.put(String.class, STRING_VALUE_ENCODER);
-            classDispatcher.put(Float.class, FLOAT_VALUE_ENCODER);
             classDispatcher.put(Double.class, FLOAT_VALUE_ENCODER);
             classDispatcher.put(Byte[].class, BYTE_ARRAY_VALUE_ENCODER);
             classDispatcher.put(List.class, LIST_VALUE_ENCODER);
             classDispatcher.put(Map.class, MAP_VALUE_ENCODER);
             classDispatcher.put(Boolean.class, BOOL_VALUE_ENCODER);
+
+            casterDispatcher = new HashMap<>();
+            casterDispatcher.put(Byte.class, (Object obj) -> (long) (byte) obj);
+            casterDispatcher.put(Short.class, (Object obj) -> (long) (short) obj);
+            casterDispatcher.put(Integer.class, (Object obj) -> (long) (int) obj);
+
+            casterDispatcher.put(Float.class, (Object obj) -> (double) (float) obj);
         }
     }
 
     @Override
     public void encode(Object object, IBufferWriter writer) {
+        Class objClass = object.getClass();
+        ICaster caster = casterDispatcher.get(objClass);
+        if (caster != null) {
+            object = caster.cast(object);
+        }
         Class classObject = object.getClass();
-            Byte encoderType = classDispatcher.get(classObject);
-            if(encoderType == null) {
-                if(Modifier.isFinal(classObject.getModifiers())) {
-                    encoderType = GENERAL_VALUE_ENCODER;
-                }else {
-                    throw new EncoderNotFoundException(classObject);
-                }
+        Byte encoderType = classDispatcher.get(classObject);
+        if (encoderType == null) {
+            if (Modifier.isFinal(classObject.getModifiers())) {
+                encoderType = GENERAL_VALUE_ENCODER;
+            } else {
+                throw new EncoderNotFoundException(classObject);
             }
-             doEncode(encoderType, object, writer);
+        }
+        doEncode(encoderType, object, writer);
     }
 
     private void doEncode(Byte type, Object object, IBufferWriter bufferWriter) {
         IEncoder encoder = encoderDispatcher.get(type);
-        if(encoder == null) {
+        if (encoder == null) {
             throw new EncoderNotFoundException(object.getClass());
         }
         bufferWriter.write(type);
@@ -69,7 +83,7 @@ public class ValueEncoder implements IEncoder {
     public Object decode(IBufferReader reader) {
         Byte type = reader.read();
         IEncoder encoder = encoderDispatcher.get(type);
-        if(encoder == null) {
+        if (encoder == null) {
             throw new EncoderNotFoundException(type);
         }
         return encoder.decode(reader);
@@ -80,11 +94,11 @@ public class ValueEncoder implements IEncoder {
     }
 
     public static long unpack(byte data) {
-        return data&0xFF;
+        return data & 0xFF;
     }
 
     public static byte pack(long data) {
-        return (byte)data;
+        return (byte) data;
     }
 
     public static byte[] toPrimitive(Byte[] data) {
