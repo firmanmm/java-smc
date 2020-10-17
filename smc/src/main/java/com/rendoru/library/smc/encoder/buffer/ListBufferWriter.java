@@ -34,6 +34,11 @@ public class ListBufferWriter implements IBufferWriter {
         buffer.position(position + length);
     }
 
+    @Override
+    public void reset() {
+        buffer.position(0);
+    }
+
     private void allocationCheck(long size){
         int remaining = buffer.remaining();
         if(remaining < size) {

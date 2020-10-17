@@ -37,7 +37,7 @@ public class ValueEncoder implements IEncoder {
             classDispatcher.put(Long.class, INT_VALUE_ENCODER);
             classDispatcher.put(String.class, STRING_VALUE_ENCODER);
             classDispatcher.put(Double.class, FLOAT_VALUE_ENCODER);
-            classDispatcher.put(Byte[].class, BYTE_ARRAY_VALUE_ENCODER);
+            classDispatcher.put(byte[].class, BYTE_ARRAY_VALUE_ENCODER);
             classDispatcher.put(List.class, LIST_VALUE_ENCODER);
             classDispatcher.put(Map.class, MAP_VALUE_ENCODER);
             classDispatcher.put(Boolean.class, BOOL_VALUE_ENCODER);
@@ -53,20 +53,28 @@ public class ValueEncoder implements IEncoder {
 
     @Override
     public void encode(Object object, IBufferWriter writer) {
-        Class objClass = object.getClass();
-        ICaster caster = casterDispatcher.get(objClass);
-        if (caster != null) {
-            object = caster.cast(object);
-        }
-        Class classObject = object.getClass();
-        Byte encoderType = classDispatcher.get(classObject);
-        if (encoderType == null) {
-            if (Modifier.isFinal(classObject.getModifiers())) {
-                encoderType = GENERAL_VALUE_ENCODER;
-            } else {
-                throw new EncoderNotFoundException(classObject);
+        Byte encoderType;
+        if(object instanceof List) {
+            encoderType = LIST_VALUE_ENCODER;
+        } else if(object instanceof Map) {
+            encoderType = MAP_VALUE_ENCODER;
+        } else {
+            Class objClass = object.getClass();
+            ICaster caster = casterDispatcher.get(objClass);
+            if (caster != null) {
+                object = caster.cast(object);
+            }
+            Class classObject = object.getClass();
+            encoderType = classDispatcher.get(classObject);
+            if (encoderType == null) {
+                if (Modifier.isFinal(classObject.getModifiers())) {
+                    encoderType = GENERAL_VALUE_ENCODER;
+                } else {
+                    throw new EncoderNotFoundException(classObject);
+                }
             }
         }
+
         doEncode(encoderType, object, writer);
     }
 

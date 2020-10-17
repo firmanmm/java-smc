@@ -6,5 +6,6 @@ public interface IBufferWriter {
     void write(byte data);
     void write(byte[] data);
     void write(byte[] data, int start, int end);
+    void reset();
     byte[] getArrayCopy();
 }
