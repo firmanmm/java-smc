@@ -1,6 +1,9 @@
 # Java Simple Message Codec
 This is an implementation of Simple Message Codec in Java.
 
+## Installation
+Please follow this link [jitpack.io](https://jitpack.io/#firmanmm/java-smc/v0.0.1) for installation
+
 ## Compability
 This implementation should be compatible with `universal` version of other simple message codec that I wrote. 
 
