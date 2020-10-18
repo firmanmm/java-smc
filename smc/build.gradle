@@ -1,8 +1,10 @@
 apply plugin: 'java-library'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.firmanmm'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.1'
     testImplementation "org.mockito:mockito-core:2.+"
 }
 
