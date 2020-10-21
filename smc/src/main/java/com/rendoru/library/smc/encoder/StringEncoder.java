@@ -15,8 +15,9 @@ public class StringEncoder implements IEncoder {
     @Override
     public void encode(Object object, IBufferWriter writer) {
         String data = (String)object;
-        integerEncoder.encode((long)data.length(), writer);
-        writer.write(data.getBytes());
+        byte[] byteData = data.getBytes();
+        integerEncoder.encode((long)byteData.length, writer);
+        writer.write(byteData);
     }
 
     @Override
